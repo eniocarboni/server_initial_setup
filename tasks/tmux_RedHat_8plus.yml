@@ -1,0 +1,3 @@
+---
+- name: Update package tmux
+  ansible.builtin.package: "name=tmux state=latest" # noqa package-latest

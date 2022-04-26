@@ -1,0 +1,35 @@
+---
+- name: "Install Ufw firewall package"
+  ansible.builtin.package: "name=ufw state=latest" # noqa package-latest
+
+- name: "Enable ufw firewall"
+  ansible.builtin.service:
+    name: ufw
+    state: started
+    enabled: yes
+
+- name: "Add Application Profile rule to Ufw firewall"
+  community.general.ufw:
+    rule: allow
+    name: "{{ ufw_item }}"
+  with_items: "{{ ufw.profile_enable }}"
+  loop_control:
+    loop_var: ufw_item
+                                                                                 
+- name: "Add rules to Ufw firewall"
+  community.general.ufw:
+    rule: "{{ ufw_item.rule }}"
+    direction: "{{ ufw_item.direction }}"
+    proto: "{{ ufw_item.proto }}"
+    port: "{{ ufw_item.port }}"
+    from: "{{ ufw_item.from }}"
+    to: "{{ ufw_item.to }}"
+    log: "{{ ufw_item.log }}"
+  with_items: "{{ ufw.rules |  default([]) | list }}"
+  loop_control:
+    loop_var: ufw_item
+                                                                                 
+- name: "Deny everything and enable UFW"                                                           
+  community.general.ufw:                                                                           
+    state: enabled                                                                                 
+    default: deny 

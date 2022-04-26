@@ -1,0 +1,36 @@
+---
+- name: "Check if RedHat version < 8"
+  ansible.builtin.set_fact:
+   rhver: '8minus'
+  changed_when: false
+
+- name: "Check if RedHat version > 7"
+  ansible.builtin.set_fact:
+    rhver: '8plus'
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8
+  changed_when: false
+
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - software_update_{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml
+    - software_update_{{ ansible_os_family }}.yml
+    - software_update_default.yml
+  when: software_update
+
+- name: Install new packages
+  ansible.builtin.package: "name={{ item }} state=latest" # noqa package-latest
+  with_items: "{{ packages }}"
+
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - auto_upgrade_{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml
+    - auto_upgrade_{{ ansible_os_family }}.yml
+    - auto_upgrade_default.yml
+  when: auto_upgrade
+
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - tmux_{{ ansible_os_family }}_{{ rhver }}.yml
+    - screen.yml
+  when: screen_or_tmux
+

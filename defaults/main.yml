@@ -1,0 +1,32 @@
+---
+
+locales:
+  - en_US.UTF-8
+  - it_IT.UTF-8
+
+# for list of locales see command: localectl list-locales
+locale_def: en_US.UTF-8
+# for list of timezone see command: timedatectl list-timezones
+timezone: Europe/Rome
+hostname: ""
+firewall: true
+ufw:
+  profile_enable:
+    - OpenSSH
+#  rules:
+#    - rule: "allow"
+#      direction: "in"
+#      proto: "tcp"
+#      port: "80"
+#      from: "any"
+#      to: "any"
+#      log: no
+firewalld:
+  service_enable:
+    - ssh
+software_update: true
+packages:
+  - wget
+  - openssh-server
+auto_upgrade: no
+screen_or_tmux: true

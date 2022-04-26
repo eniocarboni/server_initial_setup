@@ -1,0 +1,22 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint -c .ansible-lint
+platforms:
+  - name: instance_os
+    image: ${DOCKER_IMAGE:-eniocarboni/docker-ubuntu-systemd:latest}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    command: /sbin/init
+    privileged: true
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+  enabled: False
