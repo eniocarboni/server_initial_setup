@@ -2,6 +2,28 @@
 - name: "Install Ufw firewall package"
   ansible.builtin.package: "name=ufw state=latest" # noqa package-latest
 
+
+- name: "check if ipv6 is disables"
+  ansible.builtin.command: sysctl -e -n net.ipv6.conf.all.disable_ipv6
+  register: ipv6_status
+  changed_when: false
+
+- name: "Enable ipv6 for ufw"
+  ansible.builtin.lineinfile:
+    path: /etc/default/ufw
+    state: present
+    regexp: '^IPV6='
+    line: 'IPV6=yes'
+  when: ipv6_status.stdout == '0'
+
+- name: "Disable ipv6 for ufw"
+  ansible.builtin.lineinfile:
+    path: /etc/default/ufw
+    state: present
+    regexp: '^IPV6='
+    line: 'IPV6=no'
+  when: ipv6_status.stdout == '1'
+
 - name: "Enable ufw firewall"
   ansible.builtin.service:
     name: ufw

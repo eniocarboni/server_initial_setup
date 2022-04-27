@@ -1,0 +1,12 @@
+---
+- name: "enable default ipv6 interfaces (for those created later)"
+  ansible.builtin.command: sysctl net.ipv6.conf.default.disable_ipv6=0
+  when: ipv6_default_disable.stdout != '0'
+- name: "enable all ipv6 interfaces present"
+  ansible.builtin.command: sysctl net.ipv6.conf.all.disable_ipv6=0
+  when: ipv6_all_disable.stdout != '0'
+- name: "Remove file /etc/sysctl.d/70-ipv6.conf"
+  ansible.builtin.file:
+    path: /etc/sysctl.d/70-ipv6.conf
+    state: absent
+

@@ -1,0 +1,20 @@
+---
+- name: "Create 70-ipv6.conf file to disable ipv6 at system startup"
+  ansible.builtin.copy:
+    content: |
+      net.ipv6.conf.all.disable_ipv6 = 1
+      net.ipv6.conf.default.disable_ipv6 = 1
+    dest: /etc/sysctl.d/70-ipv6.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: ipv6_conf_file
+- name: "disable default ipv6 interfaces (for those created later)"
+  ansible.builtin.command: sysctl net.ipv6.conf.default.disable_ipv6=1
+  when: ipv6_default_disable.stdout != '1'
+- name: "disable all ipv6 interfaces present"
+  ansible.builtin.command: sysctl net.ipv6.conf.all.disable_ipv6=1
+  when: ipv6_all_disable.stdout != '1'
+- name: "testttttt"
+  ansible.builtin.debug:
+    msg: "ipv6_all_disable: {{ ipv6_all_disable.stdout }}"

@@ -10,6 +10,8 @@ locale_def: en_US.UTF-8
 timezone: Europe/Rome
 hostname: ""
 firewall: true
+# disable/enable IPV6 (default to disable so we can test everywhere)
+disable_ipv6: true
 ufw:
   profile_enable:
     - OpenSSH

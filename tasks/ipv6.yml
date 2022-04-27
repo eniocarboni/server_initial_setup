@@ -1,0 +1,13 @@
+---
+- name: "check value of net.ipv6.conf.default.disable_ipv6"
+  ansible.builtin.command: sysctl -e -n net.ipv6.conf.default.disable_ipv6
+  register: ipv6_default_disable
+  changed_when: false
+- name: "check value of net.ipv6.conf.all.disable_ipv6"
+  ansible.builtin.command: sysctl -e -n net.ipv6.conf.all.disable_ipv6
+  register: ipv6_all_disable
+  changed_when: false
+- include_tasks: ipv6_disable.yml
+  when: disable_ipv6
+- include_tasks: ipv6_enable.yml
+  when: not disable_ipv6

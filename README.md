@@ -32,6 +32,14 @@ The hostname to set (def. *no hastname set*)
 hostname: myhostname
 ```
 
+### disable_ipv6
+
+Boolean to disable or enable ipv6 (def. *true*, ipv6 disabled)
+
+```
+disable_ipv6 = true
+```
+
 ### firewall
 
 Boolean true or false to enable or not a firewall (def. true).
