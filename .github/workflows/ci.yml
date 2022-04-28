@@ -5,9 +5,7 @@ name: CI
   push:
     branches:
       - main
-
 jobs:
-
   molecule:
     name: Molecule
     runs-on: ubuntu-latest
@@ -21,23 +19,18 @@ jobs:
           - eniocarboni/docker-rockylinux-systemd:8
           - eniocarboni/docker-centos-systemd:centos8
           - eniocarboni/docker-centos-systemd:centos7
-
     steps:
       - name: Check out
         uses: actions/checkout@v3
-
       - name: Set up Python 3.
         uses: actions/setup-python@v3
         with:
           python-version: '3.x'
-
       - name: Install ansible, molecule and dependences
         run: pip3 install ansible molecule[docker] docker yamllint ansible-lint
-
       - name: Run Molecule tests
         run: molecule test
         env:
           DOCKER_IMAGE: ${{ matrix.dockerdistro }}
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-
