@@ -1,0 +1,4 @@
+{% for sysctl in sysctls|dict2items %}
+{{ sysctl.key }} = {{ sysctl.value }}
+{% endfor %}
+

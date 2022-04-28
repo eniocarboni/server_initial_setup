@@ -30,3 +30,10 @@ packages:
   - openssh-server
 auto_upgrade: no
 screen_or_tmux: true
+# sysctls (dictionary not an array):
+# Some values can be changed by other software such as ufw firewall on startup: 
+#   see /etc/ufw/sysctl.conf on Ubuntu system
+sysctls: {}
+#sysctls: 
+#  "net.ipv4.conf.all.accept_source_route": 1
+#  "net/ipv4/icmp_echo_ignore_broadcasts": 1

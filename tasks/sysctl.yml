@@ -1,0 +1,18 @@
+---
+- name: "add 999-sysctl-server_initial_setup.conf for any subsequent reboots"
+  ansible.builtin.blockinfile:
+    block: "{{ lookup('template', 'templates/sysctl.j2') }}"
+    path: /etc/sysctl.d/999-sysctl-server_initial_setup.conf
+    create: yes
+    owner: root
+    group: root
+    mode: 0644
+- name: "register the status of sysctl param"
+  ansible.builtin.command: "sysctl -e -n {{ item.key }}"
+  register: sysctl_params
+  changed_when: false
+  loop: "{{ sysctls|dict2items }}"
+- name: "set sysctl param"
+  ansible.builtin.command: "sysctl {{ item.item.key }}={{ sysctls[item.item.key] }}"
+  loop: "{{ sysctl_params.results }}"
+  when: sysctls[item.item.key]|string != item.stdout|string

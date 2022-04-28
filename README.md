@@ -40,6 +40,17 @@ Boolean to disable or enable ipv6 (def. *true*, ipv6 disabled)
 disable_ipv6 = true
 ```
 
+### sysctls
+
+Dictionary of key/value to use with sysctl command (def. is empty dict).
+The key/value will be saved in */etc/sysctl.d/999-sysctl-server_initial_setup.conf*
+
+```
+sysctls:
+  "net.ipv4.conf.all.accept_source_route": 1
+  "net/ipv4/icmp_echo_ignore_broadcasts": 1
+```
+
 ### firewall
 
 Boolean true or false to enable or not a firewall (def. true).
