@@ -15,6 +15,3 @@
 - name: "disable all ipv6 interfaces present"
   ansible.builtin.command: sysctl net.ipv6.conf.all.disable_ipv6=1
   when: ipv6_all_disable.stdout != '1'
-- name: "testttttt"
-  ansible.builtin.debug:
-    msg: "ipv6_all_disable: {{ ipv6_all_disable.stdout }}"
