@@ -1,7 +1,6 @@
 ---
 - name: Update package screen
   ansible.builtin.package: "name=screen state=latest" # noqa package-latest
-
 - name: "Configure screen program"
   ansible.builtin.template:
     src: "screenrc.j2"

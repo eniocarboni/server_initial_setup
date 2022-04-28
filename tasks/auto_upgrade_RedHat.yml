@@ -1,7 +1,6 @@
 ---
 - name: Auto upgrade packages
   ansible.builtin.package: "name=dnf-automatic state=latest" # noqa package-latest
-
 - name: Enable dnf-automatic.timer service
   ansible.builtin.service: 
     name: dnf-automatic.timer

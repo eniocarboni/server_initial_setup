@@ -3,14 +3,12 @@
   ansible.builtin.package: "name={{ item }} state=latest" # noqa package-latest
   with_items:
     - tzdata
-
 - name: Get timezone
   ansible.builtin.shell: set -o pipefail && timedatectl| grep 'Time zone'| awk '{print $3}'
   register: nowtimezone
   changed_when: false
   args:
     executable: /bin/bash
-
 - name: Set timezone
   ansible.builtin.command: timedatectl set-timezone {{ timezone }}
   when: timezone|length >0 and (nowtimezone.stdout != timezone) 

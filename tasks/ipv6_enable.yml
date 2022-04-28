@@ -9,4 +9,3 @@
   ansible.builtin.file:
     path: /etc/sysctl.d/70-ipv6.conf
     state: absent
-

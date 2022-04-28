@@ -1,7 +1,6 @@
 ---
 - name: Auto upgrade packages
   ansible.builtin.package: "name=yum-cron state=latest" # noqa package-latest
-  
 - name: Enable yum-cron service
   ansible.builtin.service: 
     name: yum-cron

@@ -25,7 +25,7 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
-        - jammty
+        - jammy
         - focal
         - bionic
         - xenial

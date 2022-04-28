@@ -1,5 +1,4 @@
 ---
-
 - import_tasks: update_packages_cache.yml
 - import_tasks: update_packages.yml
 - import_tasks: hostname.yml

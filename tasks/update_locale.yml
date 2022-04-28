@@ -4,7 +4,6 @@
   with_items:
     - locales
   when: ansible_distribution == "Ubuntu"
- 
 - name: Required Locale lang packs
   ansible.builtin.package: "name={{ item }} state=latest" # noqa package-latest
   with_items:
@@ -12,7 +11,6 @@
     - glibc-all-langpacks
     - glibc-locale-source
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version > '7'
-
 - name: Check existing locales
   ansible.builtin.shell: "set -o pipefail && locale -a | grep -i {{ item | regex_replace('-', '') | quote }}"
   register: found_locales
@@ -21,21 +19,17 @@
   loop: "{{ locales }}"
   args:
     executable: /bin/bash
-
 - name: Create missing locales
   ansible.builtin.command: "localedef -i {{ item.item | regex_replace('(.*)\\..*', '\\1') | quote }} -f {{ item.item | regex_replace('.*\\.(.*)', '\\1') | quote }} {{ item.item | quote }}"
   when: item.rc != 0
   loop: "{{ found_locales.results }}"
-    
 - name: Get current locale and language configuration
   ansible.builtin.command: localectl status
   register: locale_status
   changed_when: false
-
 - name: Parse 'LANG' from current locale and language configuration
   ansible.builtin.set_fact:
     locale_lang: "{{ locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | default([''],true) | first }}"
-
 - name: set default locale
   # see: localectl list-locales 
   ansible.builtin.command: localectl set-locale LANG={{ locale_def }}

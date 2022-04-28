@@ -1,13 +1,11 @@
 ---
 - name: "Install Firewalld firewall package"
   ansible.builtin.package: "name=firewalld state=latest" # noqa package-latest
-
 - name: "Enable Firewalld firewall"
   ansible.builtin.service: 
     name: firewalld
     state: started 
     enabled: yes
-
 - name: "Add service rule to Firewalld firewall"
   ansible.posix.firewalld:
     service: "{{ firewalld_item }}"
@@ -17,5 +15,3 @@
   with_items: "{{ firewalld.service_enable }}"
   loop_control:
     loop_var: firewalld_item
-                                                                                 
-

@@ -2,4 +2,3 @@
 - name: Auto upgrade packages
   ansible.builtin.package: "name=unattended-upgrades state=latest" # noqa package-latest
   when: ansible_distribution == "Ubuntu"
-

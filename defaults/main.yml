@@ -1,9 +1,7 @@
 ---
-
 locales:
   - en_US.UTF-8
   - it_IT.UTF-8
-
 # for list of locales see command: localectl list-locales
 locale_def: en_US.UTF-8
 # for list of timezone see command: timedatectl list-timezones
