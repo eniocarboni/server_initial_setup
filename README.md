@@ -1,5 +1,5 @@
 # Ansible Role: server_initial_setup
-[![Build](https://github.com/eniocarboni/server_initial_setup/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/eniocarboni/server_initial_setup/actions/workflows/build.yml) [![GPL License](https://img.shields.io/badge/license-GPL-blue.svg)](https://www.gnu.org/licenses/) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/EnioCarboni)
+[![Build](https://github.com/eniocarboni/server_initial_setup/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/eniocarboni/server_initial_setup/actions/workflows/ci.yml) [![GPL License](https://img.shields.io/badge/license-GPL-blue.svg)](https://www.gnu.org/licenses/) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/EnioCarboni)
 
 An Ansible Role that initial setup a server/vm
 
@@ -122,6 +122,12 @@ No dependencies in particolar
 
 ## Example Playbook
 
+Install with:
+
+```
+ansible-galaxy install eniocarboni.server_initial_setup
+```
+
 ### Example 1: use default variables
 
 ```
@@ -130,7 +136,7 @@ No dependencies in particolar
   become: true
 
   roles:
-    - server_initial_setup
+    - eniocarboni.server_initial_setup
 ```
 
 ### Example 2: with use of custom variables
@@ -141,13 +147,14 @@ No dependencies in particolar
   become: true
 
   roles:
-    - role: server_initial_setup
+    - role: eniocarboni.server_initial_setup
       hostname: "privhostname"
       timezone: "America/New_York"
       packages:
         - wget
         - virtualbox
         - vagrant
+      disable_ipv6: false
 ```
 
 License
