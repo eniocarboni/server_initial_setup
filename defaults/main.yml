@@ -24,6 +24,23 @@ ufw:
 firewalld:
   service_enable:
     - ssh
+# if force_iptables use iptables instead of ufw/firewalld
+force_iptables: true
+# path where save the template shell for iptables_rules
+iptables_rules_path: "/root/iptables_rules"
+# iptables_rules is enabled only when force_iptables is true
+#  insert rules with or without leading "iptables".
+iptables_rules:
+  - "-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
+  - "-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
+  - "-A INPUT -p udp --syn -m state --state NEW --dport 53 -j ACCEPT"
+  - "-A INPUT -p udp -m state --state NEW --dport 53 -j ACCEPT"
+  - "-A INPUT -p tcp --dport 22 -j ACCEPT"
+  - "-P INPUT DROP"
+  - "-P OUTPUT ACCEPT"
+# ip6tables_rules is enabled only when force_iptables is true
+#  insert rules with or without leading "ip6tables".
+ip6tables_rules: []
 software_update: true
 packages:
   - wget

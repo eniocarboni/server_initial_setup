@@ -1,0 +1,10 @@
+---
+iptables_persistent_pkg: iptables-services
+iptables_persistent_services: 
+  - iptables
+  - ip6tables
+iptables_persistent_save_path: /etc/sysconfig/iptables
+ip6tables_persistent_save_path: /etc/sysconfig/ip6tables
+iptables_persistent_need_disable_pkg:
+  - firewalld
+

@@ -1,0 +1,16 @@
+---
+- name: "Flush and recreate all iptables rules as new"
+  ansible.builtin.command: "{{ iptables_rules_path| default('/root/iptables_rules') }}/iptables_main_rules.sh"
+  listen: "Reload iptables rules"
+- name: "Flush and recreate all ip6tables rules as new"
+  ansible.builtin.command: "{{ iptables_rules_path| default('/root/iptables_rules') }}/ip6tables_main_rules.sh"
+  listen: "Reload iptables rules"
+- name: Save iptables rules
+  ansible.builtin.shell: "set -o pipefail && iptables-save > {{ iptables_persistent_save_path }}"
+  args:
+    executable: /bin/bash
+- name: Save ip6tables rules
+  ansible.builtin.shell: "set -o pipefail && ip6tables-save > {{ ip6tables_persistent_save_path }}"
+  args:
+    executable: /bin/bash
+  listen: "Reload iptables rules"

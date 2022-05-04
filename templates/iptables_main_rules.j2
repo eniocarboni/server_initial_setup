@@ -1,0 +1,44 @@
+#! /bin/bash
+#
+# This script is created by ansible role eniocarboni.server_initial_setup
+# We can use it to reset iptables to its default value
+#
+# Operation:
+# 1 - flush all the rules in all chain, zero the  packet and byte counters in all chains and delete the optional user-defined chain;
+# 2 - apply all iptables rules from this ansible role (eniocarboni.server_initial_setup);
+# 3 - apply any other rules from files in /root/iptables_rules/iptables_rules.d/iptables_*.sh
+#     So we can add personal rule or by an other ansible role after this role is started or restarted
+# ################################
+
+dirn=$(dirname "$0")
+#
+# Start Operation 1:
+#
+TABLES=$(iptables-save | sed -E -n 's/^\*//p')
+for table in $TABLES
+do
+    CHAINS=$(iptables-save -t $table | sed -E -n 's/^:([A-Z]+).*/\1/p')
+    for chain in $CHAINS
+    do
+        # policy can't be set on user-defined chains
+        iptables -t $table -P $chain ACCEPT || true
+    done
+    iptables -t $table -F
+    iptables -t $table -Z
+    iptables -t $table -X
+done
+#
+# Start Operation 2:
+#
+{% for rule in iptables_rules|default([]) %}
+{{ rule| regex_replace('^iptables *' , '')| regex_replace('^','iptables ') }}
+{% endfor %}
+#
+# Start Operation 3:
+#
+for other_rules_file in "${dirn}"/iptables_rules.d/iptables_*.sh
+do
+  if [ -f "${other_rules_file}" ]; then
+    . "${other_rules_file}"
+  fi
+done

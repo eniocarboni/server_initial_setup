@@ -88,6 +88,45 @@ firewalld:
     - ssh
 ```
 
+### force_iptables
+
+If force_iptables use iptables instead of ufw or firewalld (def. false)
+
+```
+force_iptables: false
+```
+
+### iptables_rules_path
+
+Path where save the templates (*iptables_main_rules.j2* and *ip6tables_main_rules.j2*) shell for *iptables_rules* and *ip6tables_rules*
+  (def. /root/iptables_rules)
+
+```
+iptables_rules_path: "/root/iptables_rules"
+```
+
+### iptables_rules
+
+*iptables_rules* is used only when *force_iptables* is true
+
+It's an array of *iptables* rules and rules can be inserted with or without leading *iptables*.
+(def. [])
+
+```
+iptables_rules: []
+```
+
+### ip6tables_rules
+
+*ip6ables_rules* is used only when *force_iptables* is true
+
+It's an array of *ip6tables* rules and rules can be inserted with or without leading *ip6tables*.
+(def. [])
+
+```
+ip6tables_rules: []
+```
+
 ### software_update
 
 Boolean true or false for update all software during profilinga (def. true)
@@ -166,6 +205,36 @@ ansible-galaxy install eniocarboni.server_initial_setup
         - virtualbox
         - vagrant
       disable_ipv6: false
+```
+
+### Example 3: with use of custom variables sysctl and iptables
+
+```
+---
+- hosts: all
+  become: true
+
+  roles:
+    - role: eniocarboni.server_initial_setup
+      hostname: "privhostname"
+      timezone: "Europe/Rome"
+      packages:
+        - wget
+      sysctls:
+        vm.swappiness: 10
+        net.ipv4.conf.all.accept_source_route: 0
+      disable_ipv6: false
+      force_iptables: true
+      iptables_rules_path: "/root/iptables_rules"
+      iptables_rules:
+        - "-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
+        - "-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
+        - "-A INPUT -p udp --syn -m state --state NEW --dport 53 -j ACCEPT"
+        - "-A INPUT -p udp -m state --state NEW --dport 53 -j ACCEPT"
+        - "-A INPUT -p tcp --dport 22 -j ACCEPT"
+        - "-P INPUT DROP"
+        - "-P OUTPUT ACCEPT"
+      ip6tables_rules: []
 ```
 
 License

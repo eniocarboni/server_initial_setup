@@ -1,4 +1,10 @@
 ---
+- name: "include main vars based on OS"
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "include_{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "include_{{ ansible_distribution }}.yml"
+    - "include_{{ ansible_os_family }}.yml"
 - import_tasks: update_packages_cache.yml
 - import_tasks: update_packages.yml
 - import_tasks: hostname.yml

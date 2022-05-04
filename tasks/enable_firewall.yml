@@ -3,4 +3,6 @@
   with_first_found:
     - "enable_firewall_{{ ansible_os_family }}.yml"
     - "enable_firewall_default.yml"
-  when: firewall|bool
+  when: firewall|bool and not force_iptables
+- include_tasks: enable_firewall_iptables.yml
+  when: firewall|bool and force_iptables

@@ -1,0 +1,44 @@
+#! /bin/bash
+#
+# This script is created by ansible role eniocarboni.server_initial_setup
+# We can use it to reset ip6tables to its default value
+#
+# Operation:
+# 1 - flush all the rules in all chain, zero the  packet and byte counters in all chains and delete the optional user-defined chain;
+# 2 - apply all ip6tables rules from this ansible role (eniocarboni.server_initial_setup);
+# 3 - apply any other rules from files in /root/iptables_rules/iptables_rules.d/ip6tables_*.sh
+#     So we can add personal rule or by an other ansible role after this role is started or restarted
+# ################################
+
+dirn=$(dirname "$0")
+#
+# Start Operation 1:
+#
+TABLES=$(ip6tables-save | sed -E -n 's/^\*//p')
+for table in $TABLES
+do
+    CHAINS=$(ip6tables-save -t $table | sed -E -n 's/^:([A-Z]+).*/\1/p')
+    for chain in $CHAINS
+    do
+        # policy can't be set on user-defined chains
+        ip6tables -t $table -P $chain ACCEPT || true
+    done
+    ip6tables -t $table -F
+    ip6tables -t $table -Z
+    ip6tables -t $table -X
+done
+#
+# Start Operation 2:
+#
+{% for rule in ip6tables_rules| default([]) %}
+{{ rule| regex_replace('^ip6tables *' , '')| regex_replace('^','ip6tables ') }}
+{% endfor %}
+#
+# Start Operation 3:
+#
+for other_rules_file in "${dirn}"/iptables_rules.d/ip6tables_*.sh
+do
+  if [ -f "${other_rules_file}" ]; then
+    . "${other_rules_file}"
+  fi
+done

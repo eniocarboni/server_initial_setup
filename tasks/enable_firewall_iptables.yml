@@ -1,0 +1,43 @@
+---
+- name: "Remove packages in contrast to iptables-persistent"
+  ansible.builtin.package: "name={{ item }} state=absent"
+  with_items: "{{ iptables_persistent_need_disable_pkg| default([]) }}"
+- name: "install iptables"
+  ansible.builtin.package: "name=iptables  state=latest" # noqa package-latest
+- name: "install iptables-persistent"
+  ansible.builtin.package: "name={{ iptables_persistent_pkg }} state=latest" # noqa package-latest
+- name: "start and enable iptables-persistent service"
+  ansible.builtin.service: "name={{ item }} state=started enabled=yes"
+  with_items: "{{ iptables_persistent_services| default([]) }}"
+- name: "Create {{ iptables_rules_path| default('/root/iptables_rules') }} directory if it does not exist"
+  ansible.builtin.file:
+    path: "{{ iptables_rules_path| default('/root/iptables_rules') }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+- name: "Create {{ iptables_rules_path| default('/root/iptables_rules') }}/iptables_rules.d/ directory if it does not exist"
+  ansible.builtin.file:
+    path: "{{ iptables_rules_path| default('/root/iptables_rules') }}/iptables_rules.d/"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+- name: "copy template iptable_main_rules.sh if needed"
+  ansible.builtin.template:
+    src: "iptables_main_rules.j2"
+    dest: "{{ iptables_rules_path| default('/root/iptables_rules') }}/iptables_main_rules.sh"
+    owner: root
+    group: root
+    mode: 0774
+  notify:
+    - Reload iptables rules
+- name: "copy template ip6table_main_rules.sh if needed"
+  ansible.builtin.template:
+    src: "ip6tables_main_rules.j2"
+    dest: "{{ iptables_rules_path| default('/root/iptables_rules') }}/ip6tables_main_rules.sh"
+    owner: root
+    group: root
+    mode: 0774
+  notify:
+    - Reload iptables rules
