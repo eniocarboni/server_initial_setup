@@ -25,19 +25,20 @@ firewalld:
   service_enable:
     - ssh
 # if force_iptables use iptables instead of ufw/firewalld
-force_iptables: true
+force_iptables: false
 # path where save the template shell for iptables_rules
 iptables_rules_path: "/root/iptables_rules"
 # iptables_rules is enabled only when force_iptables is true
 #  insert rules with or without leading "iptables".
-iptables_rules:
-  - "-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
-  - "-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
-  - "-A INPUT -p udp --syn -m state --state NEW --dport 53 -j ACCEPT"
-  - "-A INPUT -p udp -m state --state NEW --dport 53 -j ACCEPT"
-  - "-A INPUT -p tcp --dport 22 -j ACCEPT"
-  - "-P INPUT DROP"
-  - "-P OUTPUT ACCEPT"
+#iptables_rules:
+#  - "-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
+#  - "-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
+#  - "-A INPUT -p udp --syn -m state --state NEW --dport 53 -j ACCEPT"
+#  - "-A INPUT -p udp -m state --state NEW --dport 53 -j ACCEPT"
+#  - "-A INPUT -p tcp --dport 22 -j ACCEPT"
+#  - "-P INPUT DROP"
+#  - "-P OUTPUT ACCEPT"
+iptables_rules: []
 # ip6tables_rules is enabled only when force_iptables is true
 #  insert rules with or without leading "ip6tables".
 ip6tables_rules: []
@@ -53,4 +54,4 @@ screen_or_tmux: true
 sysctls: {}
 #sysctls: 
 #  "net.ipv4.conf.all.accept_source_route": 1
-#  "net/ipv4/icmp_echo_ignore_broadcasts": 1
+#  "net.ipv4.icmp_echo_ignore_broadcasts": 1
