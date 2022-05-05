@@ -5,11 +5,69 @@ An Ansible Role that initial setup a server/vm
 
 ## Role Variables
 
-The available variables are listed below, for all references see `defaults/main.yml`
+The available variables are listed below (sorted temporally according to use), for all references see `defaults/main.yml`
+
+### software_update
+
+Boolean true or false for update all software during profilinga (def. true)
+
+```
+software_update: true
+```
+
+### packages
+
+List of packages to install with default to:
+
+```
+packages:
+  - wget
+  - openssh-server
+```
+
+### auto_upgrade
+
+Boolean true or false to auto security updates packages using (def. no):
+* *unattended-upgrades* for Ubuntu OS;
+* *dnf-automatic* for RedHat OS version greter equal then 8;
+* *yum-cron* for RedHat OS version less than 8
+
+```
+auto_upgrade: no
+```
+
+### screen_or_tmux
+
+Boolean true or false for install *screen* or *tmux* package (def. true).
+Install *screen* on all OS except for RedHat OS version greater equal then 8.
+When *screen* is installed there will also be the .screenrc file under /root
+
+```
+screen_or_tmux: true
+```
+
+### hostname
+
+The hostname to set (def. *no hostname set*)
+
+```
+hostname: myhostname
+```
+
+### timezone
+
+The Timezone to set in this server (def. *Europe/Rome*)
+for list of timezone see command: `timedatectl list-timezones`
+
+```
+timezone: Europe/Rome
+```
 
 ### locales
 
 A locale's list to enable, with default to:
+for list of locales see command: `localectl list-locales`
+
 ```
 locales:
   - en_US.UTF-8
@@ -20,16 +78,8 @@ locales:
 
 The default locale (def. *en_US.UTF-8*)
 
-### timezone
-
-The Timezone to set in this server (def. *Europe/Rome*)
-
-### hostname
-
-The hostname to set (def. *no hastname set*)
-
 ```
-hostname: myhostname
+locale_def: en_US.UTF-8
 ```
 
 ### disable_ipv6
@@ -45,10 +95,11 @@ disable_ipv6 = true
 Dictionary of key/value to use with sysctl command (def. is empty dict).
 The key/value will be saved in */etc/sysctl.d/999-sysctl-server_initial_setup.conf*
 
+Some values can be changed by other software such as *ufw firewall* on startup:
+* see */etc/ufw/sysctl.conf* on Ubuntu system
+
 ```
-sysctls:
-  "net.ipv4.conf.all.accept_source_route": 1
-  "net/ipv4/icmp_echo_ignore_broadcasts": 1
+sysctls: {}
 ```
 
 ### firewall
@@ -76,7 +127,7 @@ ufw:
 
 ### firewalld
 
-Configure firewall firewalld for ReadHat OS (RedHat, Centos, RockyLinux).
+Configure firewall *firewalld* for ReadHat OS (RedHat, Centos, RockyLinux).
 You can add service with *service_enable:*
 
 Default value to:
@@ -90,7 +141,7 @@ firewalld:
 
 ### force_iptables
 
-If force_iptables use iptables instead of ufw or firewalld (def. false)
+Boolean to force use *iptables* / *ip6tables* instead of ufw or firewalld (def. false)
 
 ```
 force_iptables: false
@@ -107,10 +158,10 @@ iptables_rules_path: "/root/iptables_rules"
 
 ### iptables_rules
 
-*iptables_rules* is used only when *force_iptables* is true
-
-It's an array of *iptables* rules and rules can be inserted with or without leading *iptables*.
-(def. [])
+It's an array of *iptables* rules.
+ Rules can be inserted with or without leading *iptables*.
+ *iptables_rules* needs option *force_iptables: true*
+ (def. [])
 
 ```
 iptables_rules: []
@@ -118,52 +169,13 @@ iptables_rules: []
 
 ### ip6tables_rules
 
-*ip6ables_rules* is used only when *force_iptables* is true
-
-It's an array of *ip6tables* rules and rules can be inserted with or without leading *ip6tables*.
+It's an array of *ip6tables* rules.
+ Rules can be inserted with or without leading *ip6tables*.
+ *ip6tables_rules* needs option *force_iptables: true*
 (def. [])
 
 ```
 ip6tables_rules: []
-```
-
-### software_update
-
-Boolean true or false for update all software during profilinga (def. true)
-
-```
-software_update: true
-```
-
-### packages
-
-List of packages to install with default to:
-
-```
-packages:
-  - wget
-  - openssh-server
-```
-
-### auto_upgrade
-
-Enable auto upgrade of security updates packages using (def. no):
-* *unattended-upgrades* for Ubuntu OS;
-* *dnf-automatic* for RedHat OS version greter equal then 8;
-* *yum-cron* for RedHat OS version less than 8
-
-```
-auto_upgrade: no
-```
-
-### screen_or_tmux
-
-Boolean true or false for install *screen* or *tmux* package (def. true).
-Install *screen* on all OS except for RedHat OS version greater equal then 8.
-When *screen* is installed there will also be the .screenrc file under /root
-
-```
-screen_or_tmux: true
 ```
 
 ## Dependencies

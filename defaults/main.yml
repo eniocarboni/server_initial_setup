@@ -1,18 +1,49 @@
 ---
+# [software_update] Boolean true or false for update all software
+software_update: true
+# [packages] List of packages to install
+packages:
+  - wget
+  - openssh-server
+# [auto_upgrade] Boolean true or false to auto security updates packages using:
+# - unattended-upgrades for Ubuntu OS;
+# - dnf-automatic for RedHat OS version greter equal then 8;
+# - yum-cron for RedHat OS version less than 8
+auto_upgrade: false
+# [screen_or_tmux] Boolean true or false for install screen or tmux package:
+#  Install screen on all OS except for RedHat OS version greater equal then 8.
+#  When *screen* is installed there will also be the .screenrc file under /root
+screen_or_tmux: true
+# [hostname] The hostname to set
+hostname: ""
+# [timezone] The Timezone to set in this server
+# for list of timezone see command: timedatectl list-timezones
+timezone: Europe/Rome
+# [locales] A locale's list to enable
+# for list of locales see command: localectl list-locales
 locales:
   - en_US.UTF-8
   - it_IT.UTF-8
-# for list of locales see command: localectl list-locales
+# [locale_def] The default locale
 locale_def: en_US.UTF-8
-# for list of timezone see command: timedatectl list-timezones
-timezone: Europe/Rome
-hostname: ""
-firewall: true
-# disable/enable IPV6 (default to disable so we can test everywhere)
+# [disable_ipv6] Boolean to disable or enable ipv6 (default to disable so we can test everywhere)
 disable_ipv6: true
-ufw:
-  profile_enable:
-    - OpenSSH
+# [sysctls] Dictionary of key/value to use with sysctl command
+#  The key/value will be saved in /etac/sysctl.d/999-sysctl-server_initial_setup.conf
+# Some values can be changed by other software such as ufw firewall on startup: 
+#   see /etc/ufw/sysctl.conf on Ubuntu system
+#sysctls: 
+#  "net.ipv4.conf.all.accept_source_route": 1
+#  "net.ipv4.icmp_echo_ignore_broadcasts": 1
+sysctls: {}
+# [firewall] Boolean true or false to enable or not a firewall
+# On Ubuntu/Debian use ufw firewall while on RedHat system use firewalld firewall
+firewall: true
+# [ufw] Configure firewall ufw only for Ubuntu/Debian OS.
+#  You can add profiles with profile_enable: or rules with rules:
+#ufw:
+#  profile_enable:
+#    - OpenSSH
 #  rules:
 #    - rule: "allow"
 #      direction: "in"
@@ -21,15 +52,23 @@ ufw:
 #      from: "any"
 #      to: "any"
 #      log: no
+ufw:
+  profile_enable:
+    - OpenSSH
+  rules: []
+# [firewalld] Configure firewall firewalld for ReadHat OS (RedHat, Centos, RockyLinux).
+#  You can add service with service_enable:
 firewalld:
   service_enable:
     - ssh
-# if force_iptables use iptables instead of ufw/firewalld
+# [force_iptables] Boolean to force use iptables /ip6tables instead of ufw or firewalld
 force_iptables: false
-# path where save the template shell for iptables_rules
+# [iptables_rules_path] Path where save the templates 
+#  iptables_main_rules.j2 and ip6tables_main_rules.j2 shell for iptables_rules and ip6tables_rules
 iptables_rules_path: "/root/iptables_rules"
-# iptables_rules is enabled only when force_iptables is true
-#  insert rules with or without leading "iptables".
+# [iptables_rules] It's an array of iptables rules
+#  Rules can be inserted with or without leading iptables
+#  iptables_rules needs option force_iptables: true
 #iptables_rules:
 #  - "-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
 #  - "-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
@@ -39,19 +78,7 @@ iptables_rules_path: "/root/iptables_rules"
 #  - "-P INPUT DROP"
 #  - "-P OUTPUT ACCEPT"
 iptables_rules: []
-# ip6tables_rules is enabled only when force_iptables is true
-#  insert rules with or without leading "ip6tables".
+# [ip6tables_rules] It's an array of ip6tables rules
+#  Rules can be inserted with or without leading ip6tables
+#  ip6tables_rules needs option force_iptables: true
 ip6tables_rules: []
-software_update: true
-packages:
-  - wget
-  - openssh-server
-auto_upgrade: no
-screen_or_tmux: true
-# sysctls (dictionary not an array):
-# Some values can be changed by other software such as ufw firewall on startup: 
-#   see /etc/ufw/sysctl.conf on Ubuntu system
-sysctls: {}
-#sysctls: 
-#  "net.ipv4.conf.all.accept_source_route": 1
-#  "net.ipv4.icmp_echo_ignore_broadcasts": 1
