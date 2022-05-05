@@ -82,6 +82,22 @@ The default locale (def. *en_US.UTF-8*)
 locale_def: en_US.UTF-8
 ```
 
+### ssh_keys
+
+Add or remove ssh authorized keys to *.ssh/authorized_keys* file (def. [])
+
+Each element of the array/list is a dictionary of key/value where:
+
+* *re*: its value is the regular expression to look for in every line in *.ssh/authorized_keys*
+* *key*: its value is the ssh key to add
+* *state*: its value, if exists must be `present` or `absent` with `present` as default for update or insert the ssh key. If `absent` the ssh key will be removed
+
+See example below
+
+```
+ssh_keys: []
+```
+
 ### disable_ipv6
 
 Boolean to disable or enable ipv6 (def. *true*, ipv6 disabled)
@@ -247,6 +263,22 @@ ansible-galaxy install eniocarboni.server_initial_setup
         - "-P INPUT DROP"
         - "-P OUTPUT ACCEPT"
       ip6tables_rules: []
+```
+
+### Example 4: ssh_keys
+
+```
+---
+- hosts: all
+  become: true
+
+  roles:
+    - role: eniocarboni.server_initial_setup
+    ssh_keys:
+      - re: "eniocarboni_rsa_2048bit"
+        key: "ssh-rsa AAAA...hgl==  eniocarboni_rsa_2048bit"
+      - re: "oldkeys"
+        state: absent
 ```
 
 License

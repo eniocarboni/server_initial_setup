@@ -1,0 +1,19 @@
+---
+- name: "Create .ssh directory if needed"
+  ansible.builtin.file:
+    path: "/root/.ssh"
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+- name: "Add/Remove ssh authorization keys"
+  ansible.builtin.lineinfile:
+    path: "/root/.ssh/authorized_keys"
+    create: true
+    regexp: "{{ item.re }}"
+    line: "{{ item.key| default('') }}"
+    state: "{{ item.state| default('present') }}"
+    owner: root
+    group: root
+    mode: '0700'
+  with_items: "{{ ssh_keys | default({}) }}"

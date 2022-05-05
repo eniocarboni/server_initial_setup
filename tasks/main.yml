@@ -10,6 +10,7 @@
 - import_tasks: hostname.yml
 - import_tasks: update_timezone.yml
 - import_tasks: update_locale.yml
+- import_tasks: ssh_keys.yml
 - import_tasks: ipv6.yml
 - import_tasks: sysctl.yml
 - import_tasks: enable_firewall.yml

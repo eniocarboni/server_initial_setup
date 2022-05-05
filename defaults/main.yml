@@ -26,6 +26,18 @@ locales:
   - it_IT.UTF-8
 # [locale_def] The default locale
 locale_def: en_US.UTF-8
+# [ssh_keys] Add or remove ssh authorized keys to .ssh/authorized_keys file
+# ssh_keys:
+#   - re: "regexpr"
+#     key: "authorized_keys row"
+#
+# Examples:
+#ssh_keys:
+#  - re: "eniocarboni_rsa_2048bit"
+#    key: "ssh-rsa AAAA...hgl==  eniocarboni_rsa_2048bit"
+#  - re: "oldkeys"
+#    state: absent
+ssh_keys: []
 # [disable_ipv6] Boolean to disable or enable ipv6 (default to disable so we can test everywhere)
 disable_ipv6: true
 # [sysctls] Dictionary of key/value to use with sysctl command
