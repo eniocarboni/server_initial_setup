@@ -38,7 +38,7 @@ galaxy_info:
     - initialsetup
     - timezone
     - locale
-    - ssh_keys
+    - sshauthorizedkeys
     - ipv6
     - sysctl
     - firewall
