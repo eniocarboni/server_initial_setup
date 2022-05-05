@@ -36,5 +36,16 @@ galaxy_info:
   galaxy_tags: 
     - system
     - initialsetup
-
+    - timezone
+    - locale
+    - ssh_keys
+    - ipv6
+    - sysctl
+    - firewall
+    - ufw
+    - firewalld
+    - iptables
+    - ip6tables
+    - screen
+    - tmux
 dependencies: []
